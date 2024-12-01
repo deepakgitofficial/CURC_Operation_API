@@ -1,64 +1,85 @@
-import React, {useState } from 'react'
-import { addDataToAPI } from '../API/PostApi';
+import React, { useEffect, useState } from 'react'
+import { addDataToAPI, updateDataToAPI } from '../API/PostApi';
 // import { api } from '../API/Api'
 
-const AddProduct = ({ mydata, setData }) => {
-  // console.log(mydata,'preview item')
-  let output= "";
-	for (let x in mydata) {
-  		output += mydata[x];
-  		console.log(mydata[x].id);
-	}
-  console.log(output)
+const AddProduct = ({ mydata, setData, editElement, editEleFun }) => {
+  const [addData, setAddData] = useState({});
 
-  const [addData, setAddData] = useState([]);
-
-  const[count, setCount]= useState(1)
-
-  // console.log(addData, 'input data');
+  // const [count, setCount] = useState(1);
 
   const handleInputChange = (e) => {
-    // console.log(e,'input event')
-    
     const name = e.target.name;
     const value = e.target.value;
+
     setAddData((prevData) => {
-      return { ...prevData, [name]: value, id: count}
+      return { ...prevData, [name]: value };
     })
   }
-  const handleFormSubmit = async (event) => {
-    event.preventDefault();
-    const response = await addDataToAPI(addData);
+  useEffect(() => {
+    setAddData({
+      price: editElement.price,
+      productname: editElement.productname
+    })
+  }, [editElement])
 
+  let isEmptyEdit = Object.keys(editElement).length == 0;
+
+  // ----------add-product-method----------
+  const addPostData = async () => {
+    const response = await addDataToAPI(addData);
     if ((response.status == 201)) {
       setData([...mydata, response.data]);
-     
-    } 
-    setCount((count)=> count+1)
+    }
+
+    setAddData({ price: "", productname: "" });
+  }
+  // ----------upadate-product-method----------
+  const updatePostData = async () => {
+    const response = await updateDataToAPI(editElement.id, addData);
+    // console.log(response,'updated response'); 
+    if ((response.status == 200)) {
+      setData((pre) => {
+        return pre.map((currEle) => {
+          return currEle.id === response.data.id ? response.data : currEle;
+        })
+      });
+      setAddData({ price: "", productname: "" });
+      editEleFun({})
+    }
+  }
+
+  // ----------form-Submit-------------
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+    const action = event.nativeEvent.submitter.value;
+
+    if (action == "Add") {
+      addPostData();
+    } else if (action === 'Update') {
+      updatePostData();
+    }
+    // setCount((count) => count + 1)
     // console.log(response.data, 'new data res');
-   
-   
     //  console.log(typeof(mydata))
     //  let max=  Math.max(...mydata.price);
     //  console.log(max);
     //  const arr= mydata.filter((currEle )=>{
     //   let sortedVal= currEle.id;
-             
     //          return arr[sortedVal.length]-1
     //  }) 
     //  console.log(arr,'sorted array');
   }
+
   return (
     <div className='form-section'>
       <h4>Add product</h4>
-      <form onSubmit={handleFormSubmit}>
+      <form onSubmit={handleFormSubmit}> 
         <input type="text"
           onChange={handleInputChange}
           placeholder='Product Name'
           name='productname'
-          value={addData.item}
+          value={addData.productname} 
         />
-
 
         <input type="number"
           placeholder='Price'
@@ -66,7 +87,11 @@ const AddProduct = ({ mydata, setData }) => {
           onChange={handleInputChange}
           value={addData.price}
         />
-        <input type="submit" value='submit' />
+        <button type='submit' 
+          value={isEmptyEdit ? "Add" : "Update"}
+          style={isEmptyEdit ? { backgroundColor: "orange" } : { backgroundColor: "pink" }}>
+          {isEmptyEdit ? "Add" : "Update"}
+        </button>
       </form>
     </div>
   )
