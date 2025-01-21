@@ -45,7 +45,7 @@ const Products = () => {
   return (
     <>
     <main>
-    <h2 className="text-center py-5 bg-gray-50 text-2xl">Daily Rutine Time Table</h2>
+    <h2 className="text-center py-5 bg-gray-50 text-2xl">Daily Routine Time Table</h2>
    
       <div className="container grid grid-cols-3 gap-10 py-5"> 
         <div className="add-porduct "> 

@@ -84,7 +84,7 @@ const AddProduct = ({ mydata, setData, editElement, editEleFun }) => {
 
   return (
     <div className='form-section bg-white py-12 px-10'>
-      <h4 className='pb-3'>Add product</h4>
+      <h4 className='pb-3'>Add Your Routine</h4>
       <form onSubmit={handleFormSubmit}> 
         <input type="text"
         className='border-solid border-2 border-orange-600 w-full'
