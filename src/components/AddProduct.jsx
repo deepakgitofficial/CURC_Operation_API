@@ -3,23 +3,31 @@ import { addDataToAPI, updateDataToAPI } from '../API/PostApi';
 // import { api } from '../API/Api'
 
 const AddProduct = ({ mydata, setData, editElement, editEleFun }) => {
-  const [addData, setAddData] = useState({});
+  const [addData, setAddData] = useState({
+    id: '',
+    price: "",
+    productname: ""
+  });
 
-  // const [count, setCount] = useState(1);
+  // console.log(addData, 'addData');
 
-  const handleInputChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
+  // ----------input-change-method----------
+  // if(!addData.name || !addData.value){
+  //   alert('please enter the data')
+  // }else{
 
-    setAddData((prevData) => {
-      return { ...prevData, [name]: value };
-    })
-  }
+  // }
+  const handleInputChange = (e) => { 
+
+    const {name, value} = e.target; 
+    setAddData((prevData) => ({...prevData, [name]: value, id: new Date().getTime().toString()}))
+    }
+  
+  
+  
   useEffect(() => {
-    setAddData({
-      price: editElement.price,
-      productname: editElement.productname
-    })
+    setAddData((prevData) => ({...prevData, ...editElement} ))
+  
   }, [editElement])
 
   let isEmptyEdit = Object.keys(editElement).length == 0;
@@ -51,6 +59,9 @@ const AddProduct = ({ mydata, setData, editElement, editEleFun }) => {
   // ----------form-Submit-------------
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+    if(!addData.productname || !addData.price){
+      alert('please enter the data')
+    }else{
     const action = event.nativeEvent.submitter.value;
 
     if (action == "Add") {
@@ -58,6 +69,7 @@ const AddProduct = ({ mydata, setData, editElement, editEleFun }) => {
     } else if (action === 'Update') {
       updatePostData();
     }
+  }
     // setCount((count) => count + 1)
     // console.log(response.data, 'new data res');
     //  console.log(typeof(mydata))
@@ -71,25 +83,29 @@ const AddProduct = ({ mydata, setData, editElement, editEleFun }) => {
   }
 
   return (
-    <div className='form-section'>
-      <h4>Add product</h4>
+    <div className='form-section bg-white py-12 px-10'>
+      <h4 className='pb-3'>Add product</h4>
       <form onSubmit={handleFormSubmit}> 
         <input type="text"
+        className='border-solid border-2 border-orange-600 w-full'
           onChange={handleInputChange}
-          placeholder='Product Name'
+          placeholder='Task'
           name='productname'
           value={addData.productname} 
         />
+   
 
-        <input type="number"
-          placeholder='Price'
+        <input type="Time"
+        className='border-solid border-2 border-orange-600 w-full' 
+          // placeholder='Price'
           name='price'
           onChange={handleInputChange}
           value={addData.price}
         />
         <button type='submit' 
+          className='w-full text-white'
           value={isEmptyEdit ? "Add" : "Update"}
-          style={isEmptyEdit ? { backgroundColor: "orange" } : { backgroundColor: "pink" }}>
+          style={isEmptyEdit ? { backgroundColor: "orange" } : { backgroundColor: "black" }}>
           {isEmptyEdit ? "Add" : "Update"}
         </button>
       </form>
