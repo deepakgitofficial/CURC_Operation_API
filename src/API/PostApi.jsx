@@ -15,7 +15,6 @@ export const deletePost= (id)=>{
 export const addDataToAPI= (item)=>{
      return api.post("/products", item);
 } 
-
 export const updateDataToAPI= (id, item)=>{
      return api.put(`/products/${id}`, item);
 } 
