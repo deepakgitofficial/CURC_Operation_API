@@ -22,9 +22,6 @@ const AddProduct = ({ mydata, setData, editElement, editEleFun }) => {
     const {name, value} = e.target; 
     setAddData((prevData) => ({...prevData, [name]: value, id: new Date().getTime().toString()}))
     }
-  
-  
-  
   useEffect(() => {
     setAddData((prevData) => ({...prevData, ...editElement} ))
   
@@ -92,9 +89,8 @@ const AddProduct = ({ mydata, setData, editElement, editEleFun }) => {
           placeholder='Task'
           name='productname'
           value={addData.productname} 
-        />
-   
-
+        /> 
+        
         <input type="Time"
         className='border-solid border-2 border-orange-600 w-full' 
           // placeholder='Price'
